@@ -26,18 +26,22 @@ head(data)
 
 -   **Deployed Shiny App URL:** <https://...>
 -   **Code URL:** (choose one)
-    -   GitHub repository: <https://github.com/...>
+    -   GitHub repository: <https://github.com/MtnDoob/506_Week5_Dang_DuyAnh/tree/main>
     -   or posit.cloud project (ensure instructor access): <https://posit.cloud/...>
 
 <!-- Briefly describe your app , It's main features and how to use it. -->
 
-App Description: *Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.*
+App Description: *This interactive Shiny application provides comprehensive time series forecasting for Australian wine sales data spanning from 1980 to 1994. The app enables users to analyze historical sales patterns across six wine categories (Fortified, Red, Rose, Sparkling, Sweet White, and Dry White) and generate forecasts using three sophisticated statistical models. Users can customize training periods, compare model performance, and visualize predictions with confidence intervals through an intuitive interface.*
 
 App Features:
 
--   *Lorem ipsum dolor sit amet \<required features\>*
--   *Lorem ipsum dolor sit amet \<additional features\>*
--   ...
+-   *Interactive Data Exploration* - Select multiple wine varietals and customize date ranges to focus on specific time periods and wine types of interest
+-   *Flexible Train/Test Splits* - Define custom training end dates to evaluate model performance on held-out validation data
+-   *Multiple Forecasting Models* - Automatically fits and compares three models: TSLM (trend and seasonal regression), ETS (exponential smoothing), and ARIMA (autoregressive integrated moving average)
+-   *Dynamic Forecast Visualization* - Interactive Plotly charts display historical data, forecasts with prediction intervals, and clear train/validation boundaries
+-   *Model Performance Metrics* - Comprehensive accuracy tables showing RMSE, MAE, and MAPE for both training and validation periods across all models
+-   *Detailed Model Specifications* - View the automatically selected parameters for each model (ETS states, ARIMA orders, seasonal components)
+-   *Adjustable Forecast Horizon* - Generate forecasts for 1-24 months ahead to support short and medium-term planning
 
 ## Part II — Data Story (≤ 2 pages total)
 
