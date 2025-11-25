@@ -46,7 +46,7 @@ ui <- page_sidebar(
                    max = max(wine_data$Month)),
     
     dateInput("train_end", "Training End Date:",
-              value = as.Date("2008-01-01"),
+              value = as.Date("1991-12-01"),
               min = min(wine_data$Month),
               max = max(wine_data$Month)),
     
@@ -150,9 +150,17 @@ server <- function(input, output, session) {
     req(models(), validation_data())
     
     if(nrow(validation_data()) > 0) {
-      val_periods <- nrow(validation_data()) / length(input$varietals)
-      models() %>%
-        forecast(h = val_periods)
+      # Calculate number of periods per varietal
+      n_varietals <- length(input$varietals)
+      val_periods <- as.integer(nrow(validation_data()) / n_varietals)
+      
+      # Only forecast if there are validation periods
+      if(val_periods > 0) {
+        models() %>%
+          forecast(h = val_periods)
+      } else {
+        NULL
+      }
     } else {
       NULL
     }
@@ -239,14 +247,19 @@ server <- function(input, output, session) {
     
     # Validation accuracy
     val_acc <- NULL
-    if(!is.null(validation_forecasts()) && nrow(validation_data()) > 0) {
-      val_acc <- validation_forecasts() %>%
-        accuracy(validation_data()) %>%
-        mutate(Set = "Validation") %>%
-        select(Varietal, .model, Set, RMSE, MAE, MAPE)
-    }
+    tryCatch({
+      if(!is.null(validation_forecasts()) && !is.null(validation_data()) && nrow(validation_data()) > 0) {
+        val_acc <- validation_forecasts() %>%
+          accuracy(validation_data()) %>%
+          mutate(Set = "Validation") %>%
+          select(Varietal, .model, Set, RMSE, MAE, MAPE)
+      }
+    }, error = function(e) {
+      message("Validation accuracy error: ", e$message)
+    })
     
-    if(!is.null(val_acc)) {
+    # Combine results
+    if(!is.null(val_acc) && nrow(val_acc) > 0) {
       combined_acc <- bind_rows(train_acc, val_acc)
     } else {
       combined_acc <- train_acc
@@ -254,11 +267,12 @@ server <- function(input, output, session) {
     
     combined_acc <- combined_acc %>%
       arrange(Varietal, .model, Set) %>%
-      mutate(across(c(RMSE, MAE, MAPE), ~round(.x, 3)))
+      mutate(across(c(RMSE, MAE, MAPE), ~round(.x, 2)))
     
     datatable(combined_acc, 
-              options = list(pageLength = 15, scrollX = TRUE),
-              colnames = c("Varietal", "Model", "Dataset", "RMSE", "MAE", "MAPE"))
+              options = list(pageLength = 20, scrollX = TRUE),
+              colnames = c("Varietal", "Model", "Dataset", "RMSE", "MAE", "MAPE"),
+              rownames = FALSE)
   })
 }
 
